@@ -1,8 +1,8 @@
 import exceptions.GameOverException;
-import models.Board;
-import models.IDice;
-import models.Player;
+import exceptions.InvalidPositionExceptio;
+import models.*;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -21,10 +21,37 @@ public class SnackAndLadder {
     private final IDice dice;
     private final Queue<Player> playerQueue ;
     private
-    SnackAndLadder(Board board, IDice dice, List<Player> players){
-        this.board = board;
+    SnackAndLadder( int boardSize, IDice dice, List<String> playerNames, List<int[]> ladderPositions, List<int[]> snakePositions){
         this.dice = dice;
+        List<Player> players = getPlayeres(playerNames);
+        List<Snake> snakes = getSnakes(snakePositions);
+        List<Ladder> ladders = getLadders(ladderPositions);
         playerQueue = new LinkedList<>(players);
+        this.board = new Board(boardSize, snakes,ladders );
+    }
+
+    private List<Ladder> getLadders(List<int[]> ladderPositions) {
+        List<Ladder> ladders = new ArrayList<>();
+        ladderPositions.forEach(position -> {
+            if(position.length!=2) throw new InvalidPositionExceptio("Invalid position");
+            ladders.add(new Ladder(position[0], position[1]));
+        });
+        return ladders;
+    }
+
+    private List<Snake> getSnakes(List<int[]> snakePositions) {
+        List<Snake> snakes = new ArrayList<>();
+        snakePositions.forEach(position -> {
+            if(position.length!=2) throw new InvalidPositionExceptio("Invalid position");
+            snakes.add(new Snake(position[0], position[1]));
+        });
+        return snakes;
+    }
+
+    private List<Player> getPlayeres(List<String> playerNames) {
+        List<Player> players = new ArrayList<>();
+        playerNames.forEach(playerName -> players.add(new Player(playerName)));
+        return players;
     }
 
     public Player getNextPlayerToPlay() throws GameOverException {
@@ -33,8 +60,14 @@ public class SnackAndLadder {
         return playerQueue.poll();
     }
 
-    public void play(Player player){
-
+    public void startGame(){
+        while(true){
+            Player player = getNextPlayerToPlay();
+            int roll = dice.roll();
+            board.movePlayer(player,roll);
+            if(board.checkWinner(player)){
+                System.out.println("Player has won : "+ player.getName());
+            }
+        }
     }
-
 }

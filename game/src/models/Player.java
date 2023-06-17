@@ -11,8 +11,11 @@ public class Player {
     private final String name;
     private int position;
 
-    public Player(String name, int position){
+    public Player(String name){
         this.name = name;
+    }
+    public Player(String name, int position){
+        this(name);
         this.position = position;
     }
 
@@ -29,7 +32,10 @@ public class Player {
         return name;
     }
 
-    public void move(int distance){
-
+    public void move(int distance) {
+        int newDistance = position + distance;
+        if (newDistance <= Board.size) {
+            position = distance;
+        }
     }
 }

@@ -9,4 +9,4 @@ And it has to follow proper solid and design principles.
 
 
 
-ref : https://www.codingninjas.com/codestudio/library/design-snake-and-ladder-low-level-design
+URL diagrams ref : https://www.codingninjas.com/codestudio/library/design-snake-and-ladder-low-level-design
